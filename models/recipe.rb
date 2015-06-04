@@ -18,15 +18,7 @@ class Recipe
   end
 
   def self.all
-    recipe_list = db_connection do |conn|
-      conn.exec("SELECT * FROM recipes;")
-    end
-
-    recipe_instances = []
-    recipe_list.each do |recipe_info|
-      recipe_instances << Recipe.new(recipe_info["id"], recipe_info["name"], recipe_info["instructions"], recipe_info["description"])
-    end
-    recipe_instances
+    recipes_from_database
   end
 
   def self.find(id)
@@ -46,6 +38,19 @@ class Recipe
     end
 
     Recipe.new(id, name, instructions, description, ingredients)
+  end
+
+  private
+  def recipes_from_database
+    recipe_list = db_connection do |conn|
+      conn.exec("SELECT * FROM recipes;")
+    end
+
+    recipe_instances = []
+    recipe_list.each do |recipe_info|
+      recipe_instances << Recipe.new(recipe_info["id"], recipe_info["name"], recipe_info["instructions"], recipe_info["description"])
+    end
+    recipe_instances
   end
 
 end
