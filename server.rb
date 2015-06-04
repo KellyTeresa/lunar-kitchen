@@ -5,8 +5,18 @@ require 'pg'
 require_relative 'models/recipe'
 require_relative 'models/ingredient'
 
+
 configure :development, :test do
   require 'pry'
+end
+
+def db_connection
+  begin
+    connection = PG.connect(dbname: "recipes")
+    yield(connection)
+  ensure
+    connection.close
+  end
 end
 
 get '/' do
